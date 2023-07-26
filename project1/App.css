@@ -1,0 +1,37 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    text-align: center;
+}
+
+
+.Header{
+    background-color: rgb(51, 12, 101);
+    padding: 8px;
+    color: white;
+}
+
+.main{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 14px;
+}
+
+.Movie{
+    background-color: rgb(209, 205, 205);
+    border: 1px solid black;
+    padding: 3px;
+    font-weight: 600;
+    text-align: start;
+    width: 20%;
+    margin-top: 20px;
+}
+
+.Movie img{
+    width: 100%;
+    height: 220px;
+}
