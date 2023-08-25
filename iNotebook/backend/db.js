@@ -12,19 +12,19 @@
 
 
 
-const { default: mongoose } = require("mongoose")
-const mongoURI="mongodb://localhost:27017/"
+const { default: mongoose } = require("mongoose");
+const mongoURI = "mongodb://localhost:27017/inotebook";
 
-function connectToMongo(){
-    try{
-        mongoose.set("strictQuery",false);
-        mongoose.connect(mongoURI);
-        console.log("Connected to Mongo Successfully:)");
-    }
-    catch(error){
-        console.log(error);
-        process.exit();
-    }
+function connectToMongo() {
+  try {
+    mongoose.set("strictQuery", false);
+    mongoose.connect(mongoURI);
+    console.log("Connected to Mongo Successfully:)");
+  } catch (error) {
+    console.log(error);
+    process.exit();
+  }
 }
 
 module.exports = connectToMongo;
+
