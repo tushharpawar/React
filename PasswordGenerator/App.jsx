@@ -23,6 +23,8 @@ function App() {
 
   }, [lenght,numberAllowed,charAllowed,setPassword])
 
+  // setPassword(pass);
+
   useEffect(()=>{
     passwordGenerator();
   },[length,numberAllowed,charAllowed,passwordGenerator])
