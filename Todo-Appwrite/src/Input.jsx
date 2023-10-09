@@ -43,6 +43,7 @@ const Input = () => {
     // renderTask=
   return (
     <>
+    <h1 className='text-center text-xl font-bold mt-3 '>Hi! {todo.email}</h1>
         <div className=" w-3/6 h-210 ml-80 mt-20 flex border-black border-2 rounded-md">
         
                 <input
