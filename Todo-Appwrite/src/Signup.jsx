@@ -12,38 +12,41 @@ import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 // import authService from './appwrite/auth';
-import { Client, Account, ID } from "appwrite";
-import conf from './conf/conf'
+import { ID } from 'appwrite';
+import { account } from './appwrite/auth';
+
+
 
 export default function SignUp() {
   
-    const[email,setEmail]=useState(null);
-    const[password,setPassword]=useState(null);
-    const [name,setName]=useState(null);
-   const navigate=useNavigate()
+   const navigate=useNavigate();
+   const [user,setUser]=useState({
 
-   const client = new Client()
-   .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
-   .setProject(conf.appwriteProjectId);               // Your project ID
+    name:"",
+    email:"",
+    password:""
+   })
 
-   const account = new Account(client);
+   const signUpUser=async(e)=>{
+    e.preventDefault()
     
-   const submitHandler=()=>{
-       if(!email||!password||!name) return
+    const promise=account.create(
+        ID.unique(),
+        user.email,
+        user.password,
+        user.name
+    )
 
-    const promise = account.create(ID.unique(), email,password,name);
-    
-    promise.then(function (response) {
-        console.log(response); // Success
-        navigate('/');
-    }, function (error) {
-        console.log(error); // Failure
-        navigate('/signin')
-    });
-    
-        
-        }
- 
+    promise.then(
+      function(response){
+        navigate("/profile")
+        console.log(response);
+      },
+      function(error){
+        console.log(error);
+      }
+    )
+  }
 
   return (
     
@@ -64,7 +67,7 @@ export default function SignUp() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" onSubmit={(e)=>e.preventDefault()} noValidate  sx={{ mt: 3 }}>
+          <Box component="form" noValidate  sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} >
                 <TextField
@@ -75,7 +78,12 @@ export default function SignUp() {
                   id="name"
                   label="Enter your name"
                   autoFocus
-                  onChange={(e)=>setName(e.target.value)}
+                  onChange={(e)=>{
+                    setUser({
+                    ...user,
+                    name:e.target.value
+                  })
+                  }}
                 />
               </Grid>
               
@@ -87,7 +95,12 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  onChange={(e)=>setEmail(e.target.value)}
+                  onChange={(e)=>{
+                    setUser({
+                    ...user,
+                    email:e.target.value
+                  })
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -99,7 +112,12 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
-                  onChange={(e)=>setPassword(e.target.value)}
+                  onChange={(e)=>{
+                    setUser({
+                    ...user,
+                    password:e.target.value
+                  })
+                  }}
                 />
               </Grid>
               
@@ -109,7 +127,7 @@ export default function SignUp() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={submitHandler}
+              onClick={signUpUser}
             >
               Sign Up
             </Button>
