@@ -9,36 +9,26 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Client, Account } from "appwrite";
-import conf from './conf/conf';
+import { account } from "./appwrite/auth";
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 export default function SignIn() {
-
-  const[email,setEmail]=useState(null);
-  const[password,setPassword]=useState(null);
   const navigate=useNavigate();
+  const [user,setUser]=useState({
+    email:"",
+    password:"",
+  })
 
-  const client = new Client()
-  .setEndpoint('https://cloud.appwrite.io/v1') 
-  .setProject(conf.appwriteProjectId);          
-  const account = new Account(client);
-
-  const handleSubmit = () => {
-    const promise = account.createEmailSession(email, password);
-
-    promise.then(function (response) {
-        console.log(response); // Success
-        navigate('/')
-       
-    }, function (error) {
-        console.log(error); // Failure
-        navigate('/signup');
-    });
-   
-       
-  };
+  const signinUser=async(e)=>{
+    e.preventDefault();
+    try {
+      await account.createEmailSession(user.email,user.password)
+      navigate("/profile")
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     
@@ -58,7 +48,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" onSubmit={(e)=>e.preventDefault()} noValidate sx={{ mt: 1 }}>
+          <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -68,7 +58,12 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
-              onChange={(e)=>setEmail(e.target.value)}
+              onChange={(e)=>{
+                setUser({
+                  ...user,
+                  email:e.target.value
+                })
+              }}
             />
             <TextField
               margin="normal"
@@ -79,7 +74,12 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={(e)=>setPassword(e.target.value)}
+              onChange={(e)=>{
+                setUser({
+                  ...user,
+                  password:e.target.value
+                })
+              }}
             />
             
             <Button
@@ -87,7 +87,7 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={handleSubmit}
+              onClick={signinUser}
             >
               Sign In
             </Button>
@@ -104,4 +104,4 @@ export default function SignIn() {
       </Container>
     
   );
-}
+            }
