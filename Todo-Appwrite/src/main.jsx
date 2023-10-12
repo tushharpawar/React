@@ -1,23 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
 import './index.css'
 import {RouterProvider,createBrowserRouter} from 'react-router-dom'
 import SignUp from './Signup.jsx'
 import SignIn from './Signin.jsx'
+import Profile from './Profile.jsx'
 
 const router=createBrowserRouter([
   {
     path:'/',
-    element:<App/>,
+    element:<SignIn/>,
   },
   {
     path:'/signup',
     element:<SignUp/>
   },
   {
-    path:'/signin',
-    element:<SignIn/>
+    path:'/profile',
+    element:<Profile/>
   }
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(
