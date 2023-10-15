@@ -38,15 +38,15 @@ const Todos = () => {
     <>
       <div>
         {todos &&
-          todos.map((item) => (
-            <div key={item.$id}>
+          todos.map((todo) => (
+            <div key={todo.$id}>
               <div className="w-3/6 h-12 text-center p-3 border-black border-2 rounded-md text-xl ml-80 mt-20 bg-purple-400 flex justify-between items-center">
-                <div>
-                  <p className="text-black text-lg">{item.todos}</p>
+                <div>   
+                  <p className="text-black text-lg">{todo.title}</p>
                 </div>
                 <div>
                   <span onClick={()=>{
-                    deleteTodo(item.$id)
+                    deleteTodo(todo.$id)
                   }} className=" text-red-700 cursor-pointer">Delete</span>
                 </div>
               </div>
