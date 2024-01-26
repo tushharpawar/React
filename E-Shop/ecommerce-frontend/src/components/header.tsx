@@ -9,6 +9,12 @@ const Header = () => {
 
     const [isOpen,setIsOpen]=useState<boolean>(false)
 
+    const logoutHandler = () => {
+        setIsOpen(false)
+    }
+
+
+
   return (
     <nav className='header'>
         <Link  onClick={()=>setIsOpen(false)} to="/">Home</Link>
@@ -31,7 +37,7 @@ const Header = () => {
                         }
 
                         <Link  onClick={()=>setIsOpen(false)} to="/orders">Orders</Link>
-                        <button>
+                        <button onClick={logoutHandler}>
                             <FaSignOutAlt/>
                         </button>
                     </div>
