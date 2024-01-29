@@ -9,7 +9,6 @@ const Home = () => {
   return (
     <div className='home'>
       <section>
-
       </section>
 
       <h1>Latest Products
