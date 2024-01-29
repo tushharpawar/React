@@ -7,6 +7,14 @@ import Header from "./components/header"
 const Home = lazy(() => import('./pages/home'))
 const Search = lazy(() => import('./pages/search'))
 const Cart = lazy(() => import('./pages/cart'))
+const Login = lazy(() => import('./pages/login'))
+
+
+
+
+const Shipping = lazy(() => import('./pages/shipping'))
+const Orders = lazy(() => import('./pages/orders'))
+const OrderDetails = lazy(() => import('./pages/order-details'))
 
 
 //Admin routes
@@ -39,6 +47,17 @@ const App = () => {
           <Route path='/' element={<Home />} />
           <Route path='/search' element={<Search />} />
           <Route path='/cart' element={<Cart />} />
+
+          {/* not logged in route */}
+          <Route path='/login' element={<Login />} />
+
+
+          {/* logged in user routes */}
+          <Route>
+          <Route path='/shipping' element={<Shipping />} />
+          <Route path='/orders' element={<Orders />} />
+          <Route path='/order/:id' element={<OrderDetails />} />
+          </Route>
 
           {/* Admin Route */}
           {/* <Route
