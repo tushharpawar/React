@@ -1,7 +1,9 @@
 import express  from "express"
 import { errorMiddleware } from "./middlewares/error.js";
-import userRouter from "./routes/user.js"
 import { connectDB } from "./utils/features.js";
+
+import userRouter from "./routes/user.js"
+import productRouter from "./routes/product.js"
 
 const app = express();
 const port = 4000;
@@ -13,7 +15,10 @@ app.use(express.json());
 app.get("/",(req,res)=>{
     res.send("Api is working with /api/v1")
 })
+
 app.use("/api/v1/user",userRouter)
+app.use("/api/v1/product",productRouter)
+app.use("/uploads",express.static("uploads"))
 
 app.use(errorMiddleware)
 
