@@ -4,11 +4,16 @@ import { connectDB } from "./utils/features.js";
 
 import userRouter from "./routes/user.js"
 import productRouter from "./routes/product.js"
+import NodeCache from "node-cache";
 
 const app = express();
 const port = 4000;
 
 connectDB();
+
+export const myCache = new NodeCache();
+
+
 app.use(express.json());
 //Using api
 
