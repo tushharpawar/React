@@ -9,11 +9,14 @@ import {
   getSingleProduct,
   updateProduct,
   deleteProduct,
+  getAllProducts,
 } from "../controllers/product.js";
 
 const app = express.Router();
 
 app.post("/new", adminOnly, singleUpload, newProduct);
+
+app.get("/all", getAllProducts);
 
 app.get("/latest", getLatestProducts);
 
