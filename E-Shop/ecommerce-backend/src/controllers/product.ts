@@ -9,6 +9,7 @@ import { Request, Response, NextFunction } from "express";
 import ErrorHandler from "../utils/utility-class.js";
 import { rm } from "fs";
 import { myCache } from "../app.js";
+import { invalidateCache } from "../utils/features.js";
 
 // import {faker} from "@faker-js/faker"
 
@@ -39,6 +40,8 @@ export const newProduct = TryCatch(
       photo: photo?.path,
     });
 
+    await invalidateCache({product:true});
+
     return res.status(201).json({
       success: true,
       message: "Product created successfully!",
@@ -47,17 +50,15 @@ export const newProduct = TryCatch(
 );
 
 export const getLatestProducts = TryCatch(async (req, res, next) => {
-  
   let products;
 
-  if(myCache.has("latest-product"))
-  products = JSON.parse(myCache.get("latest-product")as string);
+  if (myCache.has("latest-products"))
+    products = JSON.parse(myCache.get("latest-products") as string);
+  else {
+    products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
 
-    else{
-       products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
-
-      myCache.set("latest-product",JSON.stringify(products));
-    }
+    myCache.set("latest-products", JSON.stringify(products));
+  }
 
   return res.status(201).json({
     success: true,
@@ -66,7 +67,13 @@ export const getLatestProducts = TryCatch(async (req, res, next) => {
 });
 
 export const getCategories = TryCatch(async (req, res, next) => {
-  const categories = await Product.distinct("category");
+  let categories;
+  if (myCache.has("categories"))
+    categories = JSON.parse(myCache.get("categories") as string);
+  else {
+    categories = await Product.distinct("category");
+    myCache.set("categories", JSON.stringify(categories));
+  }
 
   if (!categories) return next(new ErrorHandler("Invalid category", 404));
 
@@ -77,7 +84,16 @@ export const getCategories = TryCatch(async (req, res, next) => {
 });
 
 export const getAdminProducts = TryCatch(async (req, res, next) => {
-  const products = await Product.find({});
+
+  let products;
+
+  if(myCache.has("all-products")) products = JSON.parse(myCache.get("all-products") as string);
+
+  else{
+    products = await Product.find({});
+    myCache.set("all-products",JSON.stringify(products))
+  }
+
 
   if (!products) return next(new ErrorHandler("Products not found", 404));
 
@@ -88,9 +104,23 @@ export const getAdminProducts = TryCatch(async (req, res, next) => {
 });
 
 export const getSingleProduct = TryCatch(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
 
-  if (!product) return next(new ErrorHandler("Products not found", 404));
+  const id = req.params.id
+
+  let product;
+
+  if(myCache.has(`product-${id}`)) product = JSON.parse(myCache.get(`product-${id}`) as string);
+
+  else{
+    
+    product = await Product.findById(id);
+    if (!product) return next(new ErrorHandler("Products not found", 404));
+
+    myCache.set(`product-${id}`,JSON.stringify(product))
+
+  }
+
+
 
   return res.status(201).json({
     success: true,
@@ -122,6 +152,8 @@ export const updateProduct = TryCatch(async (req, res, next) => {
 
   await product.save();
 
+  await invalidateCache({product:true});
+
   return res.status(201).json({
     success: true,
     message: "Product updated successfully!",
@@ -137,6 +169,8 @@ export const deleteProduct = TryCatch(async (req, res, next) => {
   });
 
   await Product.deleteOne();
+
+  await invalidateCache({product:true});
 
   return res.status(201).json({
     success: true,
@@ -194,7 +228,6 @@ export const getAllProducts = TryCatch(
     });
   }
 );
-
 
 // *****Generate fake data
 // const generateRandomProducts = async (count: number = 10) => {
