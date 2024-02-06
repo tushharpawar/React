@@ -1,20 +1,30 @@
 import express  from "express"
 import { errorMiddleware } from "./middlewares/error.js";
 import { connectDB } from "./utils/features.js";
+import { config } from "dotenv";
+import morgan from "morgan";
 
 import userRouter from "./routes/user.js"
 import productRouter from "./routes/product.js"
+import orderRouter from './routes/product.js'
 import NodeCache from "node-cache";
 
-const app = express();
-const port = 4000;
 
-connectDB();
+config({
+    path:"./.env",
+})
+
+const port = process.env.PORT || 4000;
+const mongoUri = process.env.MONGO_URI || ""
+
+connectDB(mongoUri);
 
 export const myCache = new NodeCache();
 
+const app = express();
 
 app.use(express.json());
+app.use(morgan("dev"))
 //Using api
 
 app.get("/",(req,res)=>{
@@ -23,6 +33,7 @@ app.get("/",(req,res)=>{
 
 app.use("/api/v1/user",userRouter)
 app.use("/api/v1/product",productRouter)
+app.use("/api/v1/order",orderRouter)
 app.use("/uploads",express.static("uploads"))
 
 app.use(errorMiddleware)
