@@ -15,7 +15,7 @@ config({
 })
 
 const port = process.env.PORT || 4000;
-const mongoUri = process.env.MONGO_URI || ""
+const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/"
 
 connectDB(mongoUri);
 
