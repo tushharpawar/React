@@ -4,6 +4,7 @@ import { NewOrderReqBody } from "../types/types.js";
 import { Request } from "express";
 import { invalidateCache, reduceStock } from "../utils/features.js";
 import ErrorHandler from "../utils/utility-class.js";
+import { myCache } from "../app.js";
 
 export const newOrder = TryCatch(
   async (req: Request<{}, {}, NewOrderReqBody>, res, next) => {
@@ -18,16 +19,8 @@ export const newOrder = TryCatch(
       shippingCharges,
     } = req.body;
 
-    if (
-      !shippingInfo ||
-      !shippingCharges ||
-      !orderItems ||
-      !subTotal ||
-      !total ||
-      !tax ||
-      !discount ||
-      !user
-    ) return next(new ErrorHandler("Please enter all fields!",400));
+    if (!shippingInfo || !orderItems || !subTotal || !total || !tax || !user)
+      return next(new ErrorHandler("Please enter all fields!", 400));
 
     await Order.create({
       shippingInfo,
@@ -50,3 +43,21 @@ export const newOrder = TryCatch(
     });
   }
 );
+
+export const myOrders = TryCatch(async (req, res, next) => {
+  const { id: user } = req.query;
+
+  let orders = [];
+  const key = `my-orders-${user}`
+
+  if (myCache.has(key)) orders = JSON.parse(myCache.get(key) as string);
+  else {
+    orders = await Order.find({ user });
+    myCache.set("", JSON.stringify(orders));
+  }
+
+  return res.status(201).json({
+    success: true,
+    orders
+  });
+});
