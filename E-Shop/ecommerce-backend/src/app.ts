@@ -1,4 +1,5 @@
 import express  from "express"
+import mongoose from "mongoose"
 import { errorMiddleware } from "./middlewares/error.js";
 import { connectDB } from "./utils/features.js";
 import { config } from "dotenv";
@@ -15,9 +16,10 @@ config({
 })
 
 const port = process.env.PORT || 4000;
-const mongoUri = process.env.MONGO_URI || "";
+// const mongoURI = process.env.MONGO_URI || "";
 
-connectDB(mongoUri);
+connectDB();
+
 
 export const myCache = new NodeCache();
 
