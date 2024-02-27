@@ -4,13 +4,15 @@ import { Product } from "../models/product.js"
 import { myCache } from "../app.js"
 import ErrorHandler from "./utility-class.js"
 
-export const connectDB =(uri:string)=>{
-    mongoose.connect(uri , {
-        dbName:"Ecommerce_24"
-    })
-    .then(c=>console.log(`DB connected to ${c.connection.host}`))
-    .catch(e=>console.log(e))
-}
+export const connectDB = () => {
+    mongoose
+      .connect("mongodb://localhost:27017/", {
+        dbName: "Ecommerce_24",
+      })
+      .then((c) => console.log(`DB Connected to ${c.connection.host}`))
+      .catch((e) => console.log(e));
+  };
+  
 
 export const invalidateCache =async ({
     product,
