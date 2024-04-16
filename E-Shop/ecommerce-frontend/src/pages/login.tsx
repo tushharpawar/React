@@ -3,13 +3,14 @@ import { useState } from "react"
 import toast from "react-hot-toast"
 import {FcGoogle} from "react-icons/fc"
 import { auth } from "../firebase"
+import { useLoginMutation } from "../redux/api/userApi"
 
-
+ 
 const Login = () => {
 
   const [gender,setGender]=useState("")
   const [date,setDate]=useState("")
-
+  const [login] = useLoginMutation()
   const loginHandler = async() =>{
     try {
       const provider = new GoogleAuthProvider();
@@ -17,10 +18,6 @@ const Login = () => {
       
       console.log(user);
       
-      
-
-
-
 
     } catch (error) {
       toast.error("Invalid login")
@@ -42,7 +39,7 @@ const Login = () => {
     </div>
 
     <div>
-      <label >Gender</label>
+      <label >Enter date of birth</label>
       <input type="date" value={date} onChange={(e)=>setDate(e.target.value)} />
     </div>
 
@@ -57,4 +54,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Login 
